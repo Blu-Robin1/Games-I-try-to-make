@@ -21,7 +21,7 @@ def throwing():
 def select(hand):
     while True:
         selecting = input("Select your die: ")
-        selection = [int(value) for value in selecting]
+        selection = [hand[int(value)-1] for value in selecting]
         if selection == []:
             print("Gave empty") 
             continue 
@@ -33,7 +33,7 @@ def select(hand):
             want_to_score = []
             for selected in selection:                
                 for dice in hand:
-                    if dice.value == selected:
+                    if dice == selected:
                         want_to_score.append(dice)
                         if len(want_to_score) == len(selection):
                             return want_to_score
@@ -60,12 +60,12 @@ def scoring(selected):
         '666': 500,    
     }
     
-    # selected.sort()
+    selected = sorted(show_hand(selected))
 
     res_string = ''
 
     for die in selected:
-        res = die.value
+        res = die
         res_string += str(res)
 
     return scores[res_string]
@@ -73,7 +73,7 @@ def scoring(selected):
 
 def farkle():
     score=0
-    while score <=2000:
+    while score < 2000:
         hand = throwing()
         print(f'Your hand is {show_hand(hand)}')
         selected = select(hand)
