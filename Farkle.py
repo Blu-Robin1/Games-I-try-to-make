@@ -67,9 +67,11 @@ def scoring(selected):
     for die in selected:
         res = die
         res_string += str(res)
-
-    return scores[res_string]
-
+    try:
+        scored = scores[res_string]
+        return scored
+    except KeyError:
+        return print("Farkle!")
 
 def farkle():
     score=0
