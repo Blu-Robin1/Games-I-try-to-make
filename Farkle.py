@@ -99,3 +99,4 @@ def farkle():
 
 if __name__ == '__main__':
     farkle()
+    #swtich so a user can choose to read the instructions
