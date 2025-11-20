@@ -1,4 +1,5 @@
 import random
+# pip install emojiize --> emojiize.emojify(":die:")
 
 class Die:
     def __init__(self):
@@ -6,6 +7,7 @@ class Die:
     
 def show_hand(hand):
     rev=[]
+    #dict to store dice emoji
     for die in hand:
      rev.append(die.value)
     return rev
@@ -21,22 +23,24 @@ def throwing():
 def select(hand):
     while True:
         selecting = input("Select your die: ")
-        selection = [hand[int(value)-1] for value in selecting]
-        if selection == []:
-            print("Gave empty") 
-            continue 
-        elif len(selection) > 6:
-            print("Gave too many") 
-            continue 
-        
+        try:
+            selection = [hand[int(value)-1] for value in selecting]
+            if selection == []:
+                print("Gave empty") 
+                continue 
+        except (IndexError, ValueError):
+            print("Wrong input or too many")
+            continue
+
         try:
             want_to_score = []
             for selected in selection:                
                 for dice in hand:
                     if dice == selected:
                         want_to_score.append(dice)
+                        hand.pop(dice.value)
                         if len(want_to_score) == len(selection):
-                            return want_to_score
+                            return want_to_score,hand
                     
         except ValueError:
             print("Selected a dice that doesn't exit")
@@ -71,18 +75,25 @@ def scoring(selected):
         scored = scores[res_string]
         return scored
     except KeyError:
-        return print("Farkle!")
+        scored = "Farkle!"
+        return scored
 
 def farkle():
+    print("To select the dice input it's position in the list \n" \
+    "1 & 5 can be scored as singles or combinitions, rest must be of threes")
     score=0
     while score < 2000:
         hand = throwing()
+        # while len(hand) != 0: 
         print(f'Your hand is {show_hand(hand)}')
         selected = select(hand)
         print(f"You selected: {show_hand(selected)}")
         scored = scoring(selected)
-        score +=scored
-        print(f"You got {scored}\nYour new score is {score}")
+        if type(scored) == str:
+            print(f"{scored}")    
+        else:
+            score +=scored
+            print(f"You got {scored}\nYour new score is {score}")
             
     return print("Game Over")
 
