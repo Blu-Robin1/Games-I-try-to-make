@@ -8,12 +8,18 @@ class Die:
 def show_hand(hand):
     rev=[]
     #dict to store dice emoji
-    for die in hand:
-     rev.append(die.value)
+    for dice in hand:
+        if type(dice) is list:
+            for die in dice:
+                rev.append(die.value)
+        else:
+            rev.append(dice.value)
     return rev
     
-def throwing():
-    dice=["a","b","c","d","e","f"]
+
+def throwing(amount=6):
+    dice = list(range(0,amount))
+    #dice=["a","b","c","d","e","f"]
     hand=[]
     for x in dice:
         x = Die()
@@ -38,13 +44,17 @@ def select(hand):
                 for dice in hand:
                     if dice == selected:
                         want_to_score.append(dice)
-                        hand.pop(dice.value)
                         if len(want_to_score) == len(selection):
-                            return want_to_score,hand
+                            return want_to_score
                     
         except ValueError:
             print("Selected a dice that doesn't exit")
             continue
+
+def new_hand(selected,hand):
+    for dice in selected:
+        hand.remove(dice)
+    return hand
 
 def scoring(selected):
     
@@ -67,10 +77,24 @@ def scoring(selected):
     selected = sorted(show_hand(selected))
 
     res_string = ''
+    res_li=[]
+
+    # while len(res_li) <= 3:
+    #     if len(res_li) < 3:
+    #         for dice in selected:    
+    #             res_li.append(dice)
+    #             selected.pop(0)
+    #     if len(res_li) == 1:
+    #         for dice in selected:    
+    #             res_li.append(dice)
+    #             selected.pop(0)
+    #     break    
+    # res_string += str(dice)
+
 
     for die in selected:
-        res = die
-        res_string += str(res)
+        res_string += str(die)
+        
     try:
         scored = scores[res_string]
         return scored
@@ -84,17 +108,36 @@ def farkle():
     score=0
     while score < 2000:
         hand = throwing()
-        # while len(hand) != 0: 
-        print(f'Your hand is {show_hand(hand)}')
-        selected = select(hand)
-        print(f"You selected: {show_hand(selected)}")
-        scored = scoring(selected)
-        if type(scored) == str:
-            print(f"{scored}")    
-        else:
-            score +=scored
-            print(f"You got {scored}\nYour new score is {score}")
+        choice=0
+        dice_stack = []
+        while choice != 's': 
+
+            print(f'Your hand is {show_hand(hand)}')
+            selected = select(hand)
+            print(f'You selected: {show_hand(selected)}')
+
+            choice = input("Score: s \n" \
+                            "Reroll: r \n")
             
+            if choice.lower() == 's':
+                # if len(dice_stack) == 0:
+                #     scored = scoring(selected)
+                #     if type(scored) == str:                
+                #         print(f"{scored}")                    
+                #     else:                
+                #         score +=scored                
+                #         print(f"You got {scored}\nYour new score is {score}")
+                scored = scoring(selected + dice_stack)
+                if type(scored) == str:                
+                    print(f"{scored}")                    
+                else:                
+                    score +=scored                
+                    print(f"You got {scored}\nYour new score is {score}")
+            # else:
+            for die in selected:
+                dice_stack.append(die)
+            hand = new_hand(selected,hand)
+            hand = throwing(len(hand))    
     return print("Game Over")
 
 if __name__ == '__main__':
