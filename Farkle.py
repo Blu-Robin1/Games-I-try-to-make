@@ -91,8 +91,8 @@ def scoring(selected):
             if len(selected) == 0:
                 for dice in res_li:
                     res_string += str(dice)
-        
-            if value != 5 or value != 1:
+
+            elif value != 5 or value != 1:
                 for dice in res_li:
                     res_string += str(dice)
 
