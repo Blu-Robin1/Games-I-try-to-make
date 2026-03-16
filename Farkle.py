@@ -79,21 +79,34 @@ def scoring(selected):
     res_string = ''
     res_li=[]
 
-    # while len(res_li) <= 3:
-    #     if len(res_li) < 3:
-    #         for dice in selected:    
-    #             res_li.append(dice)
-    #             selected.pop(0)
-    #     if len(res_li) == 1:
-    #         for dice in selected:    
-    #             res_li.append(dice)
-    #             selected.pop(0)
-    #     break    
-    # res_string += str(dice)
+    while len(selected) != 0:
+        counter=0
+        
+        for die in selected:
+            res_li.append(die)
+            value=die
+            selected.pop(0)
+            counter +=1
+        
+            if len(selected) == 0:
+                for dice in res_li:
+                    res_string += str(dice)
+        
+            if value != 5 or value != 1:
+                for dice in res_li:
+                    res_string += str(dice)
 
+            # if value is not 1:
+            #     for dice in res_li:
+            #         res_string += str(dice)
 
-    for die in selected:
-        res_string += str(die)
+            elif counter == 2 & selected[1] != value:
+                for dice in res_li:
+                    res_string += str(dice)                          
+        break        
+
+    # for die in selected:
+    #     res_string += str(die)
         
     try:
         scored = scores[res_string]
@@ -114,19 +127,12 @@ def farkle():
 
             print(f'Your hand is {show_hand(hand)}')
             selected = select(hand)
-            print(f'You selected: {show_hand(selected)}')
+            print(f'You selected: {show_hand(selected + dice_stack)}')
 
             choice = input("Score: s \n" \
                             "Reroll: r \n")
             
             if choice.lower() == 's':
-                # if len(dice_stack) == 0:
-                #     scored = scoring(selected)
-                #     if type(scored) == str:                
-                #         print(f"{scored}")                    
-                #     else:                
-                #         score +=scored                
-                #         print(f"You got {scored}\nYour new score is {score}")
                 scored = scoring(selected + dice_stack)
                 if type(scored) == str:                
                     print(f"{scored}")                    
